@@ -54,3 +54,43 @@ export function animateNewCaptures(recentCapturedIds) {
     );
   }
 }
+
+export function animateDeckDraw(revealedIds) {
+  if (!revealedIds.size) return;
+  const deck = document.querySelector(".deck-card");
+  if (!deck) return;
+
+  const from = deck.getBoundingClientRect();
+  const fromX = from.left + from.width * 0.5;
+  const fromY = from.top + from.height * 0.5;
+  let delay = 0;
+
+  for (const cardId of revealedIds) {
+    const target = document.querySelector(`[data-card-id="${cssEscape(cardId)}"]`);
+    if (!target) continue;
+    const rect = target.getBoundingClientRect();
+    const clone = deck.cloneNode(true);
+    clone.classList.add("flying-card", "deck-draw-card");
+    Object.assign(clone.style, {
+      left: `${from.left}px`,
+      top: `${from.top}px`,
+      width: `${from.width}px`,
+      height: `${from.height}px`,
+    });
+    document.body.appendChild(clone);
+
+    const endX = rect.left + rect.width * 0.5 - fromX;
+    const endY = rect.top + rect.height * 0.5 - fromY;
+    clone
+      .animate(
+        [
+          { transform: "translate(0, 0) scale(1) rotate(0deg)", opacity: 0.96 },
+          { transform: `translate(${endX * 0.52}px, ${endY * 0.52}px) scale(1.04) rotate(9deg)`, opacity: 0.98, offset: 0.58 },
+          { transform: `translate(${endX}px, ${endY}px) scale(0.92) rotate(-4deg)`, opacity: 0 },
+        ],
+        { duration: 460, delay, easing: "cubic-bezier(.18,.86,.32,1)", fill: "forwards" },
+      )
+      .finished.finally(() => clone.remove());
+    delay += 70;
+  }
+}

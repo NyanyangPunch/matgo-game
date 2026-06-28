@@ -421,6 +421,11 @@
     0 18px 40px rgba(0, 0, 0, 0.32);
 }
 
+.deck-draw-card {
+  z-index: 24;
+  transform-origin: center;
+}
+
 .card-art {
   position: absolute;
   inset: 0;

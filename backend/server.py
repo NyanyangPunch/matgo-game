@@ -36,7 +36,7 @@ from settings import (
     TURN_LIMIT_SECONDS,
 )
 
-AUTO_PLAY_DELAY_SECONDS = 2.5
+AUTO_PLAY_DELAY_SECONDS = 2
 
 
 

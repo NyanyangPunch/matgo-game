@@ -1,4 +1,4 @@
-import { animateNewCaptures, animatePlayedCard } from "./animations.js";
+import { animateDeckDraw, animateNewCaptures, animatePlayedCard } from "./animations.js";
 import { request } from "./api.js";
 import { CAPTURE_GROUPS, CARD_IMAGES, KIND_LABELS } from "./constants.js";
 import {
@@ -26,6 +26,7 @@ let roomDialogOpen = false;
 let roomPrivate = false;
 let roomPassword = "";
 let joinPassword = "";
+let recentDeckRevealIds = new Set();
 
 restoreSession().catch((error) => {
   console.error("Failed to restore session", error);
@@ -157,8 +158,10 @@ async function sendAction(type, payload = {}) {
     if (await handleRemovedFromRoom(next)) return;
     state = next;
     recentCapturedIds = findNewCapturedIds(before, state);
+    recentDeckRevealIds = findDeckRevealIds(before, state);
     saveSession(state);
     render();
+    animateDeckDraw(recentDeckRevealIds);
     animateNewCaptures(recentCapturedIds);
   } catch (error) {
     clearSession();
@@ -176,13 +179,15 @@ async function refreshState() {
   if (await handleRemovedFromRoom(next)) return;
   state = next;
   recentCapturedIds = findNewCapturedIds(before, state);
+  recentDeckRevealIds = findDeckRevealIds(before, state);
   saveSession(state);
   if (renderSignature(before) === renderSignature(state)) {
     updateVolatileState();
     return;
   }
   render();
-    animateNewCaptures(recentCapturedIds);
+  animateDeckDraw(recentDeckRevealIds);
+  animateNewCaptures(recentCapturedIds);
 }
 
 async function handleRemovedFromRoom(nextState) {
@@ -587,7 +592,7 @@ function renderAutoToggle() {
     <button class="auto-toggle ${enabled ? "on" : ""}" data-action="toggle-auto" aria-pressed="${enabled ? "true" : "false"}">
       <span>Auto</span>
       <strong>${enabled ? "ON" : "OFF"}</strong>
-      <small>2.5초 간격</small>
+      <small>2초 간격</small>
     </button>
   `;
 }
@@ -698,6 +703,21 @@ function renderPlayer(canAct) {
       </div>
     </section>
   `;
+}
+
+function findDeckRevealIds(before, after) {
+  if (!before || !after || before.deck.length <= after.deck.length) return new Set();
+  const knownBefore = new Set([
+    ...before.hands.player.map((card) => card.id),
+    ...before.field.map((card) => card.id),
+    ...before.captured.player.map((card) => card.id),
+    ...before.captured.cpu.map((card) => card.id),
+  ]);
+  return new Set([
+    ...after.field,
+    ...after.captured.player,
+    ...after.captured.cpu,
+  ].filter((card) => !knownBefore.has(card.id)).map((card) => card.id));
 }
 
 function hintCardIds(canAct) {

@@ -177,7 +177,10 @@ async function refreshState() {
   state = next;
   recentCapturedIds = findNewCapturedIds(before, state);
   saveSession(state);
-  if (renderSignature(before) === renderSignature(state)) return;
+  if (renderSignature(before) === renderSignature(state)) {
+    updateVolatileState();
+    return;
+  }
   render();
     animateNewCaptures(recentCapturedIds);
 }
@@ -202,11 +205,20 @@ function decisionPromptActive(nextState) {
 function renderSignature(nextState) {
   if (!nextState) return "";
   const copy = JSON.parse(JSON.stringify(nextState));
+  copy.rematchRemaining = null;
   if (decisionPromptActive(copy)) {
     copy.timeRemaining = null;
     copy.turnStartedAt = null;
   }
   return JSON.stringify(copy);
+}
+
+function updateVolatileState() {
+  const rematchCount = document.querySelector("[data-role='rematch-count']");
+  if (rematchCount && state?.gameOver) {
+    const remaining = Math.max(0, Number(state.rematchRemaining ?? state.room?.rematchLimit ?? 10));
+    rematchCount.textContent = `${remaining}초 안에 새판을 선택하세요`;
+  }
 }
 
 function renderLobby(error = "") {
@@ -662,7 +674,7 @@ function sortCapturedCards(cards) {
 
 function renderPlayer(canAct) {
   return `
-    <section class="row">
+    <section class="row player-hand-row">
       <div class="row-head">
         <div class="row-title">내 손패 <span class="badge">${state.hands.player.length}</span></div>
         <div class="row-title">획득 <span class="badge">${state.captured.player.length}</span></div>
@@ -780,7 +792,7 @@ function renderResultOverlay(opponentName) {
   const rematchStatus = waitingForRematch
     ? `
         <div class="rematch-status">
-          <div class="rematch-count">${rematchRemaining}초 안에 새판을 선택하세요</div>
+          <div class="rematch-count" data-role="rematch-count">${rematchRemaining}초 안에 새판을 선택하세요</div>
           <div class="rematch-ready-row">
             <span class="${playerReady ? "ready" : ""}">나 ${playerReady ? "준비" : "대기"}</span>
             <span class="${opponentReady ? "ready" : ""}">${escapeHtml(opponentName)} ${opponentReady ? "준비" : "대기"}</span>

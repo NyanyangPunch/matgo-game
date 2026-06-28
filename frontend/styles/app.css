@@ -2310,4 +2310,14 @@ button {
   .row:not(.opponent) .cards {
     overflow: visible;
   }
+
+  .player-hand-row .cards {
+    min-height: 68px;
+    overflow: visible;
+  }
+
+  .player-hand-row .card {
+    width: clamp(36px, 6.2vw, 44px);
+    height: clamp(57px, 9.9vw, 70px);
+  }
 }

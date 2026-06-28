@@ -491,6 +491,12 @@ function renderRoomPanel() {
     state.room.mode === "human" && state.room.opponentJoined && state.room.opponentOnline === false
       ? `<div class="disconnect-notice">상대 연결이 끊겼습니다. 이번 판은 자동 진행되고 판 종료 후 방에서 정리됩니다.</div>`
       : "";
+  const autoNotice =
+    state.room.mode === "human" && state.autoPlayLocked?.cpu
+      ? `<div class="disconnect-notice">상대가 3회 이상 미응답하여 남은 차례는 자동으로 즉시 진행됩니다.</div>`
+      : state.room.mode === "human" && state.autoPlayLocked?.player
+        ? `<div class="disconnect-notice">내 차례가 자동 진행 중입니다. 직접 패를 내면 자동 진행이 해제됩니다.</div>`
+        : "";
   return `
     <div class="room-panel">
       <div><strong>${mode}</strong></div>
@@ -499,6 +505,7 @@ function renderRoomPanel() {
       <div>초대 주소 <button class="copy-code" data-action="copy-room">복사</button></div>
       <div>${seat}</div>
       ${disconnectNotice}
+      ${autoNotice}
     </div>
   `;
 }

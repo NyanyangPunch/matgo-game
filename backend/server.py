@@ -51,6 +51,8 @@ def new_game():
         "winner": None,
         "goScore": {PLAYER: 0, OPPONENT: 0},
         "goCount": {PLAYER: 0, OPPONENT: 0},
+        "autoPlayStreak": {PLAYER: 0, OPPONENT: 0},
+        "autoPlayLocked": {PLAYER: False, OPPONENT: False},
         "rematchReady": {PLAYER: False, OPPONENT: False},
         "rematchStartedAt": None,
         "turnStartedAt": time.time(),
@@ -244,6 +246,8 @@ def public_state(room, viewer_seat):
         OPPONENT: score_captured(state["captured"][OPPONENT]),
     }
     state["canDeclare"] = can_declare(room["state"], my_seat)
+    state["autoPlayStreak"] = room["state"].get("autoPlayStreak", {PLAYER: 0, OPPONENT: 0})
+    state["autoPlayLocked"] = room["state"].get("autoPlayLocked", {PLAYER: False, OPPONENT: False})
     state["turnLimit"] = TURN_LIMIT_SECONDS if room["mode"] == "human" else None
     state["timeRemaining"] = time_remaining(room["state"]) if room["mode"] == "human" else None
     state["rematchRemaining"] = rematch_remaining(room["state"]) if room["mode"] == "human" else None
@@ -277,6 +281,10 @@ def perspective_swap(state):
         state["winner"] = PLAYER if state["winner"] == OPPONENT else OPPONENT
     if state.get("rematchReady"):
         state["rematchReady"] = {PLAYER: state["rematchReady"][OPPONENT], OPPONENT: state["rematchReady"][PLAYER]}
+    if state.get("autoPlayStreak"):
+        state["autoPlayStreak"] = {PLAYER: state["autoPlayStreak"][OPPONENT], OPPONENT: state["autoPlayStreak"][PLAYER]}
+    if state.get("autoPlayLocked"):
+        state["autoPlayLocked"] = {PLAYER: state["autoPlayLocked"][OPPONENT], OPPONENT: state["autoPlayLocked"][PLAYER]}
     pending = state.get("pendingChoice")
     if pending and pending.get("owner") in SEATS:
         pending["owner"] = PLAYER if pending["owner"] == OPPONENT else OPPONENT
@@ -306,14 +314,18 @@ def handle_action(room, seat, payload):
             return public_state(room, seat)
         room["state"] = new_game()
     elif action == "PLAY_CARD":
+        reset_auto_play(state, seat)
         play_player_card(state, seat, payload.get("cardId"))
         run_ai_if_needed(room)
     elif action == "CHOOSE_CAPTURE":
+        reset_auto_play(state, seat)
         resolve_choice(state, seat, payload.get("cardId"))
         run_ai_if_needed(room)
     elif action == "DECLARE_GO":
+        reset_auto_play(state, seat)
         declare_go(state, seat)
     elif action == "DECLARE_STOP":
+        reset_auto_play(state, seat)
         declare_stop(state, seat)
     elif action == "FORFEIT":
         forfeit_game(state, seat)
@@ -464,8 +476,32 @@ def reset_turn_timer(state):
 def time_remaining(state):
     if state["gameOver"]:
         return 0
+    actor = state.get("pendingChoice", {}).get("owner") if state.get("pendingChoice") else state.get("turn")
+    if actor in SEATS and should_auto_play_now(state, actor):
+        return 0
     elapsed = time.time() - state.get("turnStartedAt", time.time())
     return max(0, int(TURN_LIMIT_SECONDS - elapsed))
+
+
+def should_auto_play_now(state, seat):
+    return bool(state.get("autoPlayLocked", {}).get(seat))
+
+
+def reset_auto_play(state, seat):
+    if seat not in SEATS:
+        return
+    state.setdefault("autoPlayStreak", {PLAYER: 0, OPPONENT: 0})
+    state.setdefault("autoPlayLocked", {PLAYER: False, OPPONENT: False})
+    state["autoPlayStreak"][seat] = 0
+    state["autoPlayLocked"][seat] = False
+
+
+def record_auto_play(state, seat):
+    state.setdefault("autoPlayStreak", {PLAYER: 0, OPPONENT: 0})
+    state.setdefault("autoPlayLocked", {PLAYER: False, OPPONENT: False})
+    state["autoPlayStreak"][seat] = state["autoPlayStreak"].get(seat, 0) + 1
+    if state["autoPlayStreak"][seat] >= 3:
+        state["autoPlayLocked"][seat] = True
 
 
 def prepare_rematch(state):
@@ -561,19 +597,25 @@ def enforce_timeouts(room):
         pending = state.get("pendingChoice")
         if pending:
             owner = pending["owner"]
+            locked = should_auto_play_now(state, owner)
             target = choose_capture_target(state, pending["played"])
             if not target:
                 reset_turn_timer(state)
                 return
-            state["logs"].insert(0, f"{seat_label(owner)}: 시간 초과로 먹을 패가 자동 선택되었습니다.")
+            record_auto_play(state, owner)
+            reason = "자동 진행 상태로" if locked else "시간 초과로"
+            state["logs"].insert(0, f"{seat_label(owner)}: {reason} 먹을 패가 자동 선택되었습니다.")
             resolve_choice(state, owner, target["id"])
         else:
             owner = state["turn"]
+            locked = should_auto_play_now(state, owner)
             card = choose_auto_card(state, owner)
             if not card:
                 reset_turn_timer(state)
                 return
-            state["logs"].insert(0, f"{seat_label(owner)}: 시간 초과로 {describe_card(card)} 자동 제출.")
+            record_auto_play(state, owner)
+            reason = "자동 진행 상태로" if locked else "시간 초과로"
+            state["logs"].insert(0, f"{seat_label(owner)}: {reason} {describe_card(card)} 자동 제출.")
             play_card(state, owner, card)
         run_ai_if_needed(room)
 

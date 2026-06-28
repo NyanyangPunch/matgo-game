@@ -363,7 +363,8 @@ function render() {
 
   const playerScore = state.scores.player;
   const opponentScore = state.scores.cpu;
-  const canAct = state.turn === "player" && !state.gameOver && !state.pendingChoice && state.room.opponentJoined;
+  const countdownActive = Number(state.startCountdownRemaining || 0) > 0;
+  const canAct = state.turn === "player" && !state.gameOver && !state.pendingChoice && state.room.opponentJoined && !countdownActive;
   const opponentName = state.room.mode === "practice" ? "컴퓨터" : "상대";
   const gameActive = state.room.opponentJoined && !state.gameOver;
 
@@ -421,6 +422,7 @@ function render() {
       </aside>
     </section>
     ${renderWaitingOverlay()}
+    ${renderStartCountdownOverlay()}
     ${renderChoice()}
     ${renderDecisionPrompt()}
     ${renderResultOverlay(opponentName)}
@@ -559,6 +561,20 @@ function renderWaitingOverlay() {
           <button class="result-button secondary" data-action="refresh">입장 확인</button>
           <button class="result-button danger" data-action="leave-current-room">방 나가기</button>
         </div>
+      </section>
+    </div>
+  `;
+}
+
+function renderStartCountdownOverlay() {
+  const remaining = Number(state.startCountdownRemaining || 0);
+  if (!state.room || state.room.mode !== "human" || !state.room.opponentJoined || state.gameOver || remaining <= 0) return "";
+  return `
+    <div class="start-countdown-overlay">
+      <section class="start-countdown-box">
+        <p>상대방이 들어왔습니다</p>
+        <strong>${Math.max(1, remaining)}</strong>
+        <span>이제 시작합니다</span>
       </section>
     </div>
   `;

@@ -548,6 +548,43 @@ button {
   background: rgba(3, 10, 8, 0.42);
 }
 
+.start-countdown-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 12;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(3, 10, 8, 0.44);
+}
+
+.start-countdown-box {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  width: min(360px, 100%);
+  padding: 28px 22px;
+  color: #241b08;
+  background: rgba(255, 250, 237, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  animation: decision-rise 220ms ease-out;
+}
+
+.start-countdown-box p,
+.start-countdown-box span {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.start-countdown-box strong {
+  font-size: 76px;
+  line-height: 1;
+  animation: countdown-pop 820ms ease-in-out infinite;
+}
+
 .waiting-box {
   width: min(430px, 100%);
   padding: 20px;
@@ -1474,6 +1511,18 @@ button {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes countdown-pop {
+  0% {
+    opacity: 0.56;
+    transform: scale(0.88);
+  }
+  45%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 

@@ -1,4 +1,5 @@
 import json
+import math
 import random
 import string
 import time
@@ -56,6 +57,7 @@ def new_game():
         "rematchReady": {PLAYER: False, OPPONENT: False},
         "rematchStartedAt": None,
         "turnStartedAt": time.time(),
+        "startCountdownUntil": None,
         "message": "당신의 차례입니다. 손패를 골라주세요.",
         "logs": ["새 판을 시작했습니다."],
     }
@@ -159,7 +161,9 @@ def join_room(room_id, password=""):
     room["players"][OPPONENT] = token
     room.setdefault("lastSeen", {})[OPPONENT] = time.time()
     room["state"] = new_game()
-    room["state"]["message"] = "두 플레이어가 모두 입장했습니다. 선 플레이어 차례입니다."
+    room["state"]["startCountdownUntil"] = time.time() + 3
+    room["state"]["turnStartedAt"] = room["state"]["startCountdownUntil"]
+    room["state"]["message"] = "상대방이 들어왔습니다. 곧 시작합니다."
     room["state"]["logs"].insert(0, "상대가 방에 입장해 새 판을 섞었습니다.")
     return room, OPPONENT, token, None
 
@@ -250,6 +254,7 @@ def public_state(room, viewer_seat):
     state["autoPlayLocked"] = room["state"].get("autoPlayLocked", {PLAYER: False, OPPONENT: False})
     state["turnLimit"] = TURN_LIMIT_SECONDS if room["mode"] == "human" else None
     state["timeRemaining"] = time_remaining(room["state"]) if room["mode"] == "human" else None
+    state["startCountdownRemaining"] = start_countdown_remaining(room["state"]) if room["mode"] == "human" else None
     state["rematchRemaining"] = rematch_remaining(room["state"]) if room["mode"] == "human" else None
     state["room"] = {
         "id": room["id"],
@@ -297,6 +302,8 @@ def handle_action(room, seat, payload):
         cleanup_disconnected_after_game(room)
     action = payload.get("type")
     state = room["state"]
+    if start_countdown_remaining(state) > 0 and action not in {"NEW_GAME", "FORFEIT"}:
+        return public_state(room, seat)
     if action == "NEW_GAME":
         if room["mode"] == "human":
             if not all(room["players"].get(seat_name) for seat_name in SEATS):
@@ -306,7 +313,9 @@ def handle_action(room, seat, payload):
                 mark_rematch_ready(room, seat)
                 if all(room["state"]["rematchReady"].get(seat_name) for seat_name in SEATS):
                     room["state"] = new_game()
-                    room["state"]["message"] = "두 플레이어가 모두 새판을 선택했습니다. 새 판을 시작합니다."
+                    room["state"]["startCountdownUntil"] = time.time() + 3
+                    room["state"]["turnStartedAt"] = room["state"]["startCountdownUntil"]
+                    room["state"]["message"] = "두 플레이어가 모두 새판을 선택했습니다. 곧 시작합니다."
                 return public_state(room, seat)
             return public_state(room, seat)
         if room["mode"] == "human" and not all(room["players"].get(seat_name) for seat_name in SEATS):
@@ -476,11 +485,20 @@ def reset_turn_timer(state):
 def time_remaining(state):
     if state["gameOver"]:
         return 0
+    if start_countdown_remaining(state) > 0:
+        return TURN_LIMIT_SECONDS
     actor = state.get("pendingChoice", {}).get("owner") if state.get("pendingChoice") else state.get("turn")
     if actor in SEATS and should_auto_play_now(state, actor):
         return 0
     elapsed = time.time() - state.get("turnStartedAt", time.time())
     return max(0, int(TURN_LIMIT_SECONDS - elapsed))
+
+
+def start_countdown_remaining(state):
+    until = state.get("startCountdownUntil")
+    if not until or state.get("gameOver"):
+        return 0
+    return max(0, math.ceil(until - time.time()))
 
 
 def should_auto_play_now(state, seat):
@@ -590,6 +608,8 @@ def cleanup_disconnected_after_game(room):
 
 def enforce_timeouts(room):
     state = room["state"]
+    if start_countdown_remaining(state) > 0:
+        return
     while not state["gameOver"] and time_remaining(state) <= 0:
         if can_declare(state, state["turn"]):
             reset_turn_timer(state)

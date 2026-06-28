@@ -701,20 +701,24 @@
   }
 
   .auto-toggle {
-    grid-template-columns: auto auto;
-    min-height: 34px;
-    padding: 5px 7px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-height: 30px;
+    padding: 4px 6px;
+    gap: 2px 5px;
   }
 
   .auto-toggle span,
-  .auto-toggle strong,
-  .auto-toggle small {
+  .auto-toggle strong {
     font-size: 10px;
   }
 
+  .auto-toggle small {
+    display: none;
+  }
+
   .auto-toggle strong {
-    min-width: 32px;
-    padding: 2px 5px;
+    min-width: 28px;
+    padding: 1px 4px;
   }
 
   .card.playable.hinted {

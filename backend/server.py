@@ -256,6 +256,9 @@ def public_state(room, viewer_seat):
     state = json.loads(json.dumps(room["state"]))
     my_seat = viewer_seat or PLAYER
     their_seat = other_seat(my_seat)
+    state["autoMode"] = room["state"].get("autoMode", {PLAYER: False, OPPONENT: False})
+    state["autoPlayStreak"] = room["state"].get("autoPlayStreak", {PLAYER: 0, OPPONENT: 0})
+    state["autoPlayLocked"] = room["state"].get("autoPlayLocked", {PLAYER: False, OPPONENT: False})
 
     if my_seat == OPPONENT:
         state = perspective_swap(state)
@@ -269,9 +272,6 @@ def public_state(room, viewer_seat):
         OPPONENT: score_captured(state["captured"][OPPONENT]),
     }
     state["canDeclare"] = can_declare(room["state"], my_seat)
-    state["autoMode"] = room["state"].get("autoMode", {PLAYER: False, OPPONENT: False})
-    state["autoPlayStreak"] = room["state"].get("autoPlayStreak", {PLAYER: 0, OPPONENT: 0})
-    state["autoPlayLocked"] = room["state"].get("autoPlayLocked", {PLAYER: False, OPPONENT: False})
     state["turnLimit"] = TURN_LIMIT_SECONDS
     state["timeRemaining"] = time_remaining(room["state"])
     state["startCountdownRemaining"] = start_countdown_remaining(room["state"]) if room["mode"] == "human" else None
@@ -325,7 +325,7 @@ def handle_action(room, seat, payload):
         cleanup_disconnected_after_game(room)
     action = payload.get("type")
     state = room["state"]
-    if start_countdown_remaining(state) > 0 and action not in {"NEW_GAME", "FORFEIT"}:
+    if start_countdown_remaining(state) > 0 and action not in {"NEW_GAME", "FORFEIT", "SET_AUTO_MODE"}:
         return public_state(room, seat)
     if action == "NEW_GAME":
         if room["mode"] == "human":

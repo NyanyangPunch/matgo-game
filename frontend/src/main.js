@@ -415,6 +415,7 @@ function render() {
         ${renderWalletPanel(opponentName)}
         ${renderRoomPanel()}
         ${renderTurnTimer()}
+        ${renderAutoToggle()}
         <div class="status">
           <strong>${escapeHtml(state.message)}</strong>
           <span>${state.room.mode === "practice" ? "컴퓨터와 연습게임 중입니다." : "사람과 1:1 맞고 방입니다."}</span>
@@ -576,6 +577,18 @@ function renderWaitingOverlay() {
         </div>
       </section>
     </div>
+  `;
+}
+
+function renderAutoToggle() {
+  if (!state?.room || !state.room.opponentJoined || state.gameOver) return "";
+  const enabled = Boolean(state.autoMode?.player);
+  return `
+    <button class="auto-toggle ${enabled ? "on" : ""}" data-action="toggle-auto" aria-pressed="${enabled ? "true" : "false"}">
+      <span>Auto</span>
+      <strong>${enabled ? "ON" : "OFF"}</strong>
+      <small>2.5초 간격</small>
+    </button>
   `;
 }
 
@@ -939,6 +952,8 @@ app.addEventListener("click", (event) => {
     sendAction("DECLARE_STOP");
   } else if (button.dataset.action === "forfeit") {
     sendAction("FORFEIT");
+  } else if (button.dataset.action === "toggle-auto") {
+    sendAction("SET_AUTO_MODE", { enabled: !state.autoMode?.player });
   } else if (button.dataset.action === "quit") {
     quitGame = true;
     render();

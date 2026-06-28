@@ -1684,6 +1684,59 @@ button {
   background: #ffd45c;
 }
 
+.auto-toggle {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  gap: 2px 8px;
+  min-height: 44px;
+  padding: 8px 10px;
+  color: #f8fff9;
+  text-align: left;
+  background: #26352f;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.auto-toggle span {
+  font-size: 13px;
+}
+
+.auto-toggle strong {
+  justify-self: end;
+  min-width: 42px;
+  padding: 3px 7px;
+  color: #26352f;
+  text-align: center;
+  background: #d9e2dc;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.auto-toggle small {
+  grid-column: 1 / -1;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+}
+
+.auto-toggle.on {
+  color: #2d1e04;
+  background: #ffd45c;
+  border-color: rgba(255, 255, 255, 0.58);
+  box-shadow: 0 8px 20px rgba(255, 212, 92, 0.2);
+}
+
+.auto-toggle.on strong {
+  color: #fff;
+  background: #23674f;
+}
+
+.auto-toggle.on small {
+  color: rgba(45, 30, 4, 0.72);
+}
+
 .turn-timer-head {
   display: flex;
   align-items: center;
@@ -2528,5 +2581,22 @@ button {
     min-height: 18px;
     padding: 0 6px;
     font-size: 10px;
+  }
+
+  .auto-toggle {
+    grid-template-columns: auto auto;
+    min-height: 34px;
+    padding: 5px 7px;
+  }
+
+  .auto-toggle span,
+  .auto-toggle strong,
+  .auto-toggle small {
+    font-size: 10px;
+  }
+
+  .auto-toggle strong {
+    min-width: 32px;
+    padding: 2px 5px;
   }
 }

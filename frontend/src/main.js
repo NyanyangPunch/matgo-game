@@ -549,7 +549,7 @@ function renderTurnTimer() {
   const owner = state.turn === "player" ? "내 차례" : "상대 차례";
   const pct = Math.max(0, Math.min(100, (remaining / (state.turnLimit || 10)) * 100));
   return `
-    <div class="turn-timer ${remaining <= 3 ? "urgent" : ""}">
+    <div class="turn-timer ${remaining <= 3 ? "urgent" : ""} ${state.turn === "player" ? "my-turn" : ""}">
       <div class="turn-timer-head">
         <strong>${owner}</strong>
         <span>${remaining}초</span>
@@ -674,9 +674,9 @@ function sortCapturedCards(cards) {
 
 function renderPlayer(canAct) {
   return `
-    <section class="row player-hand-row">
+    <section class="row player-hand-row ${canAct ? "my-turn" : ""}">
       <div class="row-head">
-        <div class="row-title">내 손패 <span class="badge">${state.hands.player.length}</span></div>
+        <div class="row-title">내 손패 <span class="badge">${state.hands.player.length}</span>${canAct ? `<span class="turn-badge">내 차례</span>` : ""}</div>
         <div class="row-title">획득 <span class="badge">${state.captured.player.length}</span></div>
       </div>
       <div class="cards">

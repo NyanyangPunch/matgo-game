@@ -147,6 +147,10 @@ def other_seat(seat):
     return OPPONENT if seat == PLAYER else PLAYER
 
 
+def both_players_joined(room):
+    return all(room.get("players", {}).get(seat) for seat in SEATS)
+
+
 def join_room(room_id, password=""):
     room = get_room(room_id)
     if not room or room["mode"] != "human":
@@ -230,7 +234,8 @@ def settle_practice_room(room):
 def public_state(room, viewer_seat):
     if room["mode"] == "human":
         enforce_rematch_timeout(room)
-        enforce_timeouts(room)
+        if both_players_joined(room):
+            enforce_timeouts(room)
         cleanup_disconnected_after_game(room)
     else:
         settle_practice_room(room)
@@ -298,7 +303,8 @@ def perspective_swap(state):
 
 def handle_action(room, seat, payload):
     if room["mode"] == "human":
-        enforce_timeouts(room)
+        if both_players_joined(room):
+            enforce_timeouts(room)
         cleanup_disconnected_after_game(room)
     action = payload.get("type")
     state = room["state"]
@@ -608,6 +614,8 @@ def cleanup_disconnected_after_game(room):
 
 def enforce_timeouts(room):
     state = room["state"]
+    if room["mode"] == "human" and not both_players_joined(room):
+        return
     if start_countdown_remaining(state) > 0:
         return
     while not state["gameOver"] and time_remaining(state) <= 0:
@@ -885,7 +893,8 @@ def list_rooms():
     for room in ROOMS.values():
         if room["mode"] == "human":
             enforce_rematch_timeout(room)
-            enforce_timeouts(room)
+            if both_players_joined(room):
+                enforce_timeouts(room)
             cleanup_disconnected_after_game(room)
     return [
         {

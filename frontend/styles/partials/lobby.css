@@ -1,0 +1,373 @@
+.lobby-screen {
+  display: grid;
+  min-height: calc(100vh - 36px);
+  place-items: center;
+}
+
+.lobby-panel {
+  display: grid;
+  gap: 16px;
+  width: min(560px, 100%);
+  padding: 22px;
+  background: rgba(255, 250, 237, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.lobby-heading h1 {
+  margin: 0 0 8px;
+  font-size: 30px;
+}
+
+.lobby-heading p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.lobby-error {
+  padding: 10px 12px;
+  color: #8d2525;
+  background: #ffe8e8;
+  border: 1px solid #f1bbbb;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.lobby-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.lobby-button {
+  min-height: 48px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: 950;
+}
+
+.lobby-button.practice {
+  color: #fff;
+  background: #1f624b;
+}
+
+.lobby-button.human {
+  color: #241b08;
+  background: #f0c247;
+}
+
+.lobby-button.join {
+  color: #fff;
+  background: #2f68b1;
+}
+
+.stake-panel {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.stake-panel label {
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.stake-panel p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.stake-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.stake-control span {
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.stake-input {
+  min-width: 0;
+  min-height: 42px;
+  padding: 0 12px;
+  color: var(--ink);
+  background: #fffaf0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font: inherit;
+  font-weight: 850;
+}
+
+.join-box {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 130px;
+  gap: 10px;
+}
+
+.secret-room-box {
+  grid-template-columns: 1fr 1fr 130px;
+}
+
+.password-field {
+  display: grid;
+  gap: 7px;
+  text-align: left;
+}
+
+.password-field span {
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.room-list-panel {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.room-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.small-button {
+  min-height: 30px;
+  padding: 0 10px;
+  color: #26352f;
+  background: #e7dfce;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  min-height: 92px;
+}
+
+.room-card {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 5px;
+  min-height: 92px;
+  padding: 12px;
+  color: #fff;
+  text-align: left;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 42%),
+    #1f624b;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(31, 98, 75, 0.18);
+}
+
+.room-card:hover {
+  transform: translateY(-2px);
+}
+
+.room-card.private {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.16), transparent 42%),
+    #3f4f75;
+}
+
+.room-card-title,
+.room-card span:last-child {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.room-card strong {
+  font-size: 24px;
+  letter-spacing: 0;
+}
+
+.room-card-stake {
+  display: inline-grid;
+  min-height: 24px;
+  align-items: center;
+  padding: 0 8px;
+  color: #241b08;
+  background: #f0c247;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.room-empty {
+  display: grid;
+  grid-column: 1 / -1;
+  min-height: 92px;
+  place-items: center;
+  padding: 14px;
+  color: var(--muted);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.join-input {
+  min-width: 0;
+  min-height: 48px;
+  padding: 0 12px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font: inherit;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.join-input:disabled,
+.lobby-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.secret-disabled {
+  opacity: 0.72;
+}
+
+.join-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(3, 10, 8, 0.48);
+}
+
+.join-confirm-box {
+  width: min(390px, 100%);
+  padding: 20px;
+  text-align: center;
+  background: rgba(255, 250, 237, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  animation: decision-rise 220ms ease-out;
+}
+
+.join-confirm-box h2 {
+  margin: 0 0 8px;
+}
+
+.join-confirm-box p {
+  margin: 0 0 16px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.confirm-stake {
+  display: inline-grid;
+  min-height: 30px;
+  align-items: center;
+  margin: 0 0 16px;
+  padding: 0 12px;
+  color: #241b08;
+  background: #f0c247;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.room-create-dialog {
+  display: grid;
+  gap: 14px;
+}
+
+.dialog-stake {
+  text-align: left;
+}
+
+.privacy-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.privacy-options label {
+  display: grid;
+  min-height: 44px;
+  place-items: center;
+  color: #26352f;
+  background: #f2ead8;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.privacy-options label.selected {
+  color: #241b08;
+  background: #f0c247;
+  border-color: rgba(177, 127, 22, 0.48);
+}
+
+.privacy-options input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.balance-row,
+.result-balances {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.balance-row span,
+.result-balances span {
+  display: inline-grid;
+  min-height: 26px;
+  align-items: center;
+  padding: 0 8px;
+  color: #173226;
+  background: #e8f3ec;
+  border: 1px solid rgba(45, 114, 84, 0.2);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.settlement-summary {
+  display: inline-grid;
+  min-height: 32px;
+  align-items: center;
+  margin: 0 auto 10px;
+  padding: 0 12px;
+  color: #241b08;
+  background: #f0c247;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 950;
+}

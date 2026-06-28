@@ -1,0 +1,87 @@
+.waiting-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 7;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(3, 10, 8, 0.42);
+}
+
+.start-countdown-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 12;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(3, 10, 8, 0.44);
+}
+
+.start-countdown-box {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  width: min(360px, 100%);
+  padding: 28px 22px;
+  color: #241b08;
+  background: rgba(255, 250, 237, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  animation: decision-rise 220ms ease-out;
+}
+
+.start-countdown-box p,
+.start-countdown-box span {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.start-countdown-box strong {
+  font-size: 76px;
+  line-height: 1;
+  animation: countdown-pop 820ms ease-in-out infinite;
+}
+
+.waiting-box {
+  width: min(430px, 100%);
+  padding: 20px;
+  text-align: center;
+  background: rgba(255, 250, 237, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.rotate-overlay {
+  display: none;
+}
+
+.waiting-box h2 {
+  margin: 0 0 8px;
+}
+
+.waiting-box p {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+.invite-url {
+  margin-bottom: 14px;
+  padding: 10px;
+  overflow-wrap: anywhere;
+  color: #24352e;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.waiting-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}

@@ -1,0 +1,48 @@
+:root {
+  color-scheme: light;
+  --felt: #2d7254;
+  --felt-deep: #1d4f3b;
+  --ink: #18211d;
+  --muted: #65746c;
+  --paper: #fffaf0;
+  --line: rgba(22, 30, 26, 0.18);
+  --accent: #c93535;
+  --gold: #e6ad3d;
+  --blue: #2f68b1;
+  --shadow: 0 14px 35px rgba(9, 20, 15, 0.18);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 25% 10%, rgba(255, 255, 255, 0.24), transparent 22rem),
+    linear-gradient(135deg, #234f3e 0%, #386b52 54%, #1e3f34 100%);
+}
+
+button {
+  font: inherit;
+}
+
+.game-shell {
+  width: min(1440px, 100%);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 18px;
+}
+
+.game-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 16px;
+  min-height: calc(100vh - 36px);
+}

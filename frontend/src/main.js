@@ -338,7 +338,7 @@ function renderJoinConfirm() {
             <span>비밀방 암호</span>
             <input class="join-input" type="password" value="${escapeHtml(joinPassword)}" maxlength="20" data-role="join-password" placeholder="암호 입력" />
           </label>
-        `}
+        ` : ""}
         <div class="join-confirm-actions">
           <button class="result-button primary" data-action="join-confirmed">입장하기</button>
           <button class="result-button secondary" data-action="join-cancel">취소</button>

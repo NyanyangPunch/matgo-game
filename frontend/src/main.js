@@ -27,9 +27,14 @@ let roomPrivate = false;
 let roomPassword = "";
 let joinPassword = "";
 
-restoreSession();
+restoreSession().catch((error) => {
+  console.error("Failed to restore session", error);
+  clearSession(false);
+  renderLobby("서버 상태를 확인하는 중입니다. 잠시 후 새로고침을 눌러주세요.");
+});
 
 async function restoreSession() {
+  renderLobby();
   const roomFromUrl = getRoomFromUrl();
   if (roomFromUrl) {
     joinCode = roomFromUrl;
@@ -45,13 +50,15 @@ async function restoreSession() {
         clearSession(false);
       }
     }
-    await loadOpenRooms();
     pendingJoinRoomId = roomFromUrl;
+    renderLobby();
+    await loadOpenRooms();
     renderLobby();
     return;
   }
 
   clearSession(false);
+  renderLobby();
   await loadOpenRooms();
   renderLobby();
 }

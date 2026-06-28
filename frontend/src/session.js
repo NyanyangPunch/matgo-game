@@ -26,7 +26,13 @@ export function getRoomFromUrl() {
 
 export function updateRoomUrl(nextState) {
   if (!nextState?.room) return;
-  window.history.replaceState({}, "", window.location.pathname);
+  if (nextState.room.mode !== "human") {
+    clearRoomUrl();
+    return;
+  }
+  const url = new URL(window.location.href);
+  url.searchParams.set("room", nextState.room.id);
+  window.history.replaceState({}, "", `${url.pathname}${url.search}`);
 }
 
 export function clearRoomUrl() {

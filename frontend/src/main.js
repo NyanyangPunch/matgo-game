@@ -32,30 +32,28 @@ restoreSession();
 async function restoreSession() {
   const roomFromUrl = getRoomFromUrl();
   if (roomFromUrl) {
-    clearSession(false);
     joinCode = roomFromUrl;
+    const saved = loadSession();
+    if (saved?.roomId === roomFromUrl) {
+      try {
+        state = await request(`/api/state?roomId=${encodeURIComponent(saved.roomId)}&playerId=${encodeURIComponent(saved.playerId)}`);
+        saveSession(state);
+        updateRoomUrl(state);
+        render();
+        return;
+      } catch {
+        clearSession(false);
+      }
+    }
     await loadOpenRooms();
     pendingJoinRoomId = roomFromUrl;
     renderLobby();
     return;
   }
 
-  const saved = loadSession();
-  if (!saved) {
-    await loadOpenRooms();
-    renderLobby();
-    return;
-  }
-
-  try {
-    state = await request(`/api/state?roomId=${encodeURIComponent(saved.roomId)}&playerId=${encodeURIComponent(saved.playerId)}`);
-    saveSession(state);
-    render();
-  } catch {
-    clearSession();
-    await loadOpenRooms();
-    renderLobby();
-  }
+  clearSession(false);
+  await loadOpenRooms();
+  renderLobby();
 }
 
 async function createRoom(mode, options = {}) {

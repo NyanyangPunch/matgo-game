@@ -1,8 +1,8 @@
-@import "./partials/base.css";
-@import "./partials/lobby.css";
-@import "./partials/room-panels.css";
-@import "./partials/overlays.css";
-@import "./partials/table-cards.css";
-@import "./partials/dialogs-results.css";
-@import "./partials/sidebar.css";
-@import "./partials/responsive.css";
+@import "./partials/base.css?v=hint-cache-1";
+@import "./partials/lobby.css?v=hint-cache-1";
+@import "./partials/room-panels.css?v=hint-cache-1";
+@import "./partials/overlays.css?v=hint-cache-1";
+@import "./partials/table-cards.css?v=hint-cache-1";
+@import "./partials/dialogs-results.css?v=hint-cache-1";
+@import "./partials/sidebar.css?v=hint-cache-1";
+@import "./partials/responsive.css?v=hint-cache-1";

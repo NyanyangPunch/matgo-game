@@ -835,7 +835,7 @@ def list_rooms():
             "open": room["mode"] == "human" and bool(room["players"][PLAYER]) and not room["players"][OPPONENT],
         }
         for room in ROOMS.values()
-        if room["mode"] == "human" and room["players"][PLAYER] and not room.get("private")
+        if room["mode"] == "human" and room["players"][PLAYER]
     ]
 
 

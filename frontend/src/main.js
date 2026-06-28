@@ -283,11 +283,11 @@ function renderRoomCards() {
     return `<div class="room-empty">아직 열린 방이 없습니다. 사람과 맞고 방을 만들어보세요.</div>`;
   }
   return rooms.map((room, index) => `
-    <button class="room-card" data-action="confirm-join-room" data-room-id="${escapeHtml(room.id)}">
-      <span class="room-card-title">공개 맞고 방</span>
-      <strong>공개방 ${index + 1}</strong>
+    <button class="room-card ${room.private ? "private" : ""}" data-action="confirm-join-room" data-room-id="${escapeHtml(room.id)}">
+      <span class="room-card-title">${room.private ? "비밀 맞고 방" : "공개 맞고 방"}</span>
+      <strong>${room.private ? "비밀방" : "공개방"} ${index + 1}</strong>
       <span class="room-card-stake">${formatStake(room)}</span>
-      <span>클릭해서 입장</span>
+      <span>${room.private ? "암호 입력 후 입장" : "클릭해서 입장"}</span>
     </button>
   `).join("");
 }
@@ -324,9 +324,9 @@ function renderJoinConfirm() {
     <div class="join-confirm-overlay">
       <section class="join-confirm-box">
         <h2>방에 입장할까요?</h2>
-        <p>${room ? "선택한 공개방에 두 번째 플레이어로 입장합니다." : "초대받은 방에 두 번째 플레이어로 입장합니다."}</p>
+        <p>${room?.private ? "선택한 비밀방에 암호를 입력하고 입장합니다." : room ? "선택한 공개방에 두 번째 플레이어로 입장합니다." : "초대받은 방에 두 번째 플레이어로 입장합니다."}</p>
         <div class="confirm-stake">최소 판돈 ${escapeHtml(formatStake(room))}</div>
-        ${room ? "" : `
+        ${room?.private || !room ? `
           <label class="password-field">
             <span>비밀방 암호</span>
             <input class="join-input" type="password" value="${escapeHtml(joinPassword)}" maxlength="20" data-role="join-password" placeholder="암호 입력" />

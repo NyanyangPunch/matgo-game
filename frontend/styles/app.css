@@ -238,6 +238,12 @@ button {
   transform: translateY(-2px);
 }
 
+.room-card.private {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.16), transparent 42%),
+    #3f4f75;
+}
+
 .room-card-title,
 .room-card span:last-child {
   color: rgba(255, 255, 255, 0.78);

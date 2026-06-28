@@ -422,6 +422,7 @@ function render() {
       </aside>
     </section>
     ${renderWaitingOverlay()}
+    ${renderRotateOverlay()}
     ${renderStartCountdownOverlay()}
     ${renderChoice()}
     ${renderDecisionPrompt()}
@@ -561,6 +562,18 @@ function renderWaitingOverlay() {
           <button class="result-button secondary" data-action="refresh">입장 확인</button>
           <button class="result-button danger" data-action="leave-current-room">방 나가기</button>
         </div>
+      </section>
+    </div>
+  `;
+}
+
+function renderRotateOverlay() {
+  if (!state || state.gameOver) return "";
+  return `
+    <div class="rotate-overlay">
+      <section class="rotate-box">
+        <strong>가로 화면 권장</strong>
+        <span>모바일에서는 기기를 가로로 돌리면 패와 점수를 더 편하게 볼 수 있습니다.</span>
       </section>
     </div>
   `;

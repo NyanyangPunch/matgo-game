@@ -2152,3 +2152,104 @@ button {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+
+@media (max-width: 980px) and (orientation: landscape) {
+  .game-layout {
+    grid-template-columns: minmax(0, 1fr) 174px;
+    gap: 5px;
+  }
+
+  .table {
+    grid-template-rows:
+      minmax(66px, 0.95fr)
+      22px
+      minmax(78px, 1.15fr)
+      22px
+      minmax(70px, 1fr);
+    gap: 4px;
+    padding: 5px;
+  }
+
+  .capture-lane {
+    align-content: center;
+    min-height: 0;
+    padding: 3px 5px;
+  }
+
+  .capture-lane .row-head {
+    min-height: 16px;
+  }
+
+  .capture-lane .row-title {
+    font-size: 10px;
+  }
+
+  .capture-score {
+    font-size: 9px;
+    white-space: nowrap;
+  }
+
+  .capture-board {
+    display: none;
+  }
+
+  .cards {
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 3px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .row .cards {
+    min-height: 52px;
+  }
+
+  .field .cards {
+    min-height: 60px;
+  }
+
+  .card {
+    flex: 0 0 auto;
+    width: clamp(28px, 5vw, 36px);
+    height: clamp(44px, 7.8vw, 56px);
+  }
+
+  .field {
+    padding: 4px;
+  }
+
+  .field-zone {
+    grid-template-columns: minmax(0, 1fr) 44px;
+    gap: 4px;
+  }
+
+  .deck-card {
+    width: 30px;
+    height: 48px;
+  }
+
+  .deck-panel strong,
+  .deck-count {
+    font-size: 10px;
+  }
+
+  .side-panel {
+    gap: 4px;
+    padding: 6px;
+  }
+
+  .wallet-panel,
+  .status,
+  .score-card {
+    padding: 6px;
+  }
+
+  .score-main {
+    font-size: 19px;
+  }
+
+  .score-detail span:not(:first-child) {
+    display: none;
+  }
+}

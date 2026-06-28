@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>맞고 연습장 실행 안내</title>
+    <link rel="stylesheet" href="./styles/app.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <section class="side-panel" style="max-width: 720px; margin: 8vh auto;">
+        <div class="brand">
+          <h1>맞고 연습장</h1>
+        </div>
+        <div class="status">
+          <strong>백엔드 서버로 실행하는 구조입니다.</strong>
+          <span>PowerShell에서 아래 명령을 실행한 뒤 http://127.0.0.1:5173 으로 접속하세요.</span>
+        </div>
+        <div class="log-entry">&amp; "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe" backend\server.py</div>
+      </section>
+    </main>
+  </body>
+</html>

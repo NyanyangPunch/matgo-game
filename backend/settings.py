@@ -1,0 +1,17 @@
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+FRONTEND = ROOT / "frontend"
+
+PLAYER = "player"
+OPPONENT = "cpu"
+SEATS = [PLAYER, OPPONENT]
+
+TURN_LIMIT_SECONDS = 10
+DISCONNECT_GRACE_SECONDS = 20
+REMATCH_LIMIT_SECONDS = 10
+
+MIN_STAKE_SL = "0.01"
+MAX_STAKE_SL = "100"
+PRACTICE_STAKE_SL = "1"
+PRACTICE_STARTING_BALANCE_SL = "1000"

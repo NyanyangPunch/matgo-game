@@ -382,6 +382,15 @@
   transform: translateY(-5px);
 }
 
+.card.playable.hinted {
+  animation: hint-wiggle 780ms ease-in-out infinite;
+  border-color: #fff;
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 255, 255, 0.82),
+    0 0 0 3px rgba(255, 212, 92, 0.7),
+    0 14px 26px rgba(255, 212, 92, 0.34);
+}
+
 @keyframes playable-pulse {
   0%,
   100% {
@@ -611,4 +620,22 @@
 
 .double-pi::after {
   left: 20px;
+}
+
+@keyframes hint-wiggle {
+  0%,
+  100% {
+    transform: translateY(-7px) rotate(0deg);
+    filter: brightness(1.06);
+  }
+  25% {
+    transform: translateY(-9px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+    filter: brightness(1.12);
+  }
+  75% {
+    transform: translateY(-9px) rotate(-1deg);
+  }
 }

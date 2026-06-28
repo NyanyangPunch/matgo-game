@@ -716,4 +716,26 @@
     min-width: 32px;
     padding: 2px 5px;
   }
+
+  .card.playable.hinted {
+    animation-name: hint-wiggle-compact;
+  }
+}
+
+@keyframes hint-wiggle-compact {
+  0%,
+  100% {
+    transform: translateY(-4px) rotate(0deg);
+    filter: brightness(1.06);
+  }
+  25% {
+    transform: translateY(-6px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(2deg);
+    filter: brightness(1.12);
+  }
+  75% {
+    transform: translateY(-6px) rotate(-1deg);
+  }
 }

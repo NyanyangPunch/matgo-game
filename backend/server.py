@@ -272,8 +272,8 @@ def public_state(room, viewer_seat):
     state["autoMode"] = room["state"].get("autoMode", {PLAYER: False, OPPONENT: False})
     state["autoPlayStreak"] = room["state"].get("autoPlayStreak", {PLAYER: 0, OPPONENT: 0})
     state["autoPlayLocked"] = room["state"].get("autoPlayLocked", {PLAYER: False, OPPONENT: False})
-    state["turnLimit"] = TURN_LIMIT_SECONDS if room["mode"] == "human" else None
-    state["timeRemaining"] = time_remaining(room["state"]) if room["mode"] == "human" else None
+    state["turnLimit"] = TURN_LIMIT_SECONDS
+    state["timeRemaining"] = time_remaining(room["state"])
     state["startCountdownRemaining"] = start_countdown_remaining(room["state"]) if room["mode"] == "human" else None
     state["rematchRemaining"] = rematch_remaining(room["state"]) if room["mode"] == "human" else None
     state["room"] = {

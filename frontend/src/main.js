@@ -686,6 +686,7 @@ function sortCapturedCards(cards) {
 }
 
 function renderPlayer(canAct) {
+  const hintedCards = hintCardIds(canAct);
   return `
     <section class="row player-hand-row ${canAct ? "my-turn" : ""}">
       <div class="row-head">
@@ -693,13 +694,24 @@ function renderPlayer(canAct) {
         <div class="row-title">획득 <span class="badge">${state.captured.player.length}</span></div>
       </div>
       <div class="cards">
-        ${state.hands.player.map((card) => renderCard(card, "hand", canAct)).join("")}
+        ${state.hands.player.map((card) => renderCard(card, "hand", canAct, hintedCards.has(card.id))).join("")}
       </div>
     </section>
   `;
 }
 
-function renderCard(card, zone, canAct = false) {
+function hintCardIds(canAct) {
+  if (!canAct || state.autoMode?.player) return new Set();
+  const turnLimit = Number(state.turnLimit || 10);
+  const remaining = Number(state.timeRemaining ?? turnLimit);
+  if (turnLimit - remaining < 5) return new Set();
+  const matching = state.hands.player.filter((card) =>
+    state.field.some((fieldCard) => fieldCard.month === card.month),
+  );
+  return new Set((matching.length ? matching : state.hands.player).map((card) => card.id));
+}
+
+function renderCard(card, zone, canAct = false, hinted = false) {
   const playable = zone === "hand" && canAct;
   const choose =
     state.pendingChoice?.owner === "player" &&
@@ -711,6 +723,7 @@ function renderCard(card, zone, canAct = false) {
     zone === "captured" ? "captured-card" : "",
     recentCapturedIds.has(card.id) ? "newly-captured" : "",
     playable || choose ? "playable" : "",
+    hinted ? "hinted" : "",
     card.kind,
   ].join(" ");
   const imageSrc = `${card.image || imageForCard(card)}?v=real-cards-4`;
